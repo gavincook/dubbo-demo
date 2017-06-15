@@ -8,6 +8,7 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.dubbo.rpc.service.EchoService;
 
 import me.gavincook.dubbo.api.Bank;
+import me.gavincook.dubbo.api.model.Card;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -21,8 +22,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
- * @author tanghong.th
- * @version $Id: ATMTest.java, v 0.1 2017-06-14 下午5:06 tanghong.th Exp $$
+ * @author Gavincook
+ * @version 1.0.0
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Starter.class)
@@ -34,7 +35,7 @@ public class ATMTest {
     @Reference(check = true, version = "2.0")
     private Bank icbc;
 
-    @Reference(check = true, version = "1.0")
+    @Reference(check = true, version = "1.0", validation = "true")
     private Bank ccb;
 
     @BeforeClass
@@ -68,5 +69,34 @@ public class ATMTest {
     public void testEcho(){
         String result = (String)((EchoService)icbc).$echo("OK");
         assert "OK".equals(result);
+    }
+
+    /**
+     * 参数验证
+     * <p>
+     *     其中icbc为服务端校验，ccb为客户端校验
+     * </p>
+     */
+    @Test
+    public void testValidate(){
+        Card card = new Card();
+        card.setNumber("12345678901234567");
+        card.setUserName("GavinCook");
+        icbc.openAccount(card);
+        ccb.openAccount(card);
+    }
+
+    /**
+     * 分场景验证，其中{@link Bank#closeAccount(Card)}只需要卡号
+     * {@link Bank#openAccount(Card)} 需要卡号和用户名
+     */
+    @Test
+    public void testValidateInDiffGroups(){
+        Card card = new Card();
+        card.setNumber("12345678901234567");
+        assert icbc.closeAccount(card);
+
+        card.setUserName("GavinCook");
+        assert icbc.openAccount(card);
     }
 }

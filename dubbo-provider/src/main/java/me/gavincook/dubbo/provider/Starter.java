@@ -18,8 +18,8 @@ import com.alibaba.dubbo.config.RegistryConfig;
 import com.alibaba.dubbo.config.spring.AnnotationBean;
 
 /**
- * @author tanghong.th
- * @version $Id: Starter.java, v 0.1 2017-06-14 下午5:08 tanghong.th Exp $$
+ * @author Gavincook
+ * @version 1.0.0
  */
 @EnableAutoConfiguration
 @ComponentScan(basePackages = "me.gavincook")

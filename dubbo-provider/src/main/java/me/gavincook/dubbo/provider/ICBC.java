@@ -7,13 +7,14 @@ package me.gavincook.dubbo.provider;
 import com.alibaba.dubbo.config.annotation.Service;
 
 import me.gavincook.dubbo.api.Bank;
+import me.gavincook.dubbo.api.model.Card;
 
 /**
  * 工行
- * @author tanghong.th
- * @version $Id: ICBC.java, v 0.1 2017-06-14 下午4:39 tanghong.th Exp $$
+ * @author Gavincook
+ * @version 1.0.0
  */
-@Service(version = "2.0")
+@Service(version = "2.0", validation = "true")
 public class ICBC implements Bank {
 
     public ICBC() {
@@ -28,6 +29,16 @@ public class ICBC implements Bank {
     @Override
     public String getName() {
         return "ICBC";
+    }
+
+    @Override
+    public boolean openAccount(Card card) {
+        return true;
+    }
+
+    @Override
+    public boolean closeAccount(Card card) {
+        return true;
     }
 
 }

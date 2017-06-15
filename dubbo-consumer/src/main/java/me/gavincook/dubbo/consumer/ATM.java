@@ -10,8 +10,8 @@ import me.gavincook.dubbo.api.Bank;
 import org.springframework.stereotype.Component;
 
 /**
- * @author tanghong.th
- * @version $Id: ATM.java, v 0.1 2017-06-14 下午4:48 tanghong.th Exp $$
+ * @author Gavincook
+ * @version 1.0.0
  */
 @Component
 public class ATM {
