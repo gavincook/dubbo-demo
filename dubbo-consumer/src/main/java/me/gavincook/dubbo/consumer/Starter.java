@@ -20,7 +20,7 @@ import org.springframework.context.annotation.ComponentScan.Filter;
  * @version $Id: Starter.java, v 0.1 2017-06-14 下午5:08 tanghong.th Exp $$
  */
 @EnableAutoConfiguration
-@ComponentScan(basePackages = "me.gavincook", includeFilters = {@Filter(classes = Reference.class)})
+@ComponentScan(basePackages = "me.gavincook")
 public class Starter {
 
     /**

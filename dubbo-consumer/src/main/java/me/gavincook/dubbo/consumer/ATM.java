@@ -24,4 +24,5 @@ public class ATM {
         return bank.getBalance(null);
     }
 
+
 }
