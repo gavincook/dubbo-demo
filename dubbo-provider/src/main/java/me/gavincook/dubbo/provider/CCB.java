@@ -9,25 +9,25 @@ import com.alibaba.dubbo.config.annotation.Service;
 import me.gavincook.dubbo.api.Bank;
 
 /**
- * 工行
+ * 建行
  * @author tanghong.th
  * @version $Id: ICBC.java, v 0.1 2017-06-14 下午4:39 tanghong.th Exp $$
  */
-@Service(version = "2.0")
-public class ICBC implements Bank {
+@Service(version = "1.0")
+public class CCB implements Bank {
 
-    public ICBC() {
+    public CCB(){
         System.out.println();
     }
 
     @Override
     public Double getBalance(Long userId) {
-        return 100D;
+       return 80D;
     }
 
     @Override
     public String getName() {
-        return "ICBC";
+        return "CCB";
     }
 
 }

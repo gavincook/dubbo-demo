@@ -16,4 +16,9 @@ public interface Bank {
      */
     Double getBalance(Long userId);
 
+    /**
+     * 获取银行名称
+     * @return
+     */
+    String getName();
 }

@@ -31,8 +31,11 @@ public class ATMTest {
     @Autowired
     private ConfigurableApplicationContext context;
 
-    @Reference
-    private Bank bank;
+    @Reference(check = true, version = "2.0")
+    private Bank icbc;
+
+    @Reference(check = true, version = "1.0")
+    private Bank ccb;
 
     @BeforeClass
     public static void init(){
@@ -50,11 +53,20 @@ public class ATMTest {
     }
 
     /**
+     * 多版本测试
+     */
+    @Test
+    public void testMultiVersion(){
+       assert  "ICBC".equals(icbc.getName());
+       assert  "CCB".equals(ccb.getName());
+    }
+
+    /**
      * 回声测试
      */
     @Test
     public void testEcho(){
-        String result = (String)((EchoService)bank).$echo("OK");
+        String result = (String)((EchoService)icbc).$echo("OK");
         assert "OK".equals(result);
     }
 }

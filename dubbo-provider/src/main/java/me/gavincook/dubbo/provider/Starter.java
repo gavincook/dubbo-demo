@@ -12,11 +12,9 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.ComponentScan.Filter;
 
 import com.alibaba.dubbo.config.ApplicationConfig;
 import com.alibaba.dubbo.config.RegistryConfig;
-import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.dubbo.config.spring.AnnotationBean;
 
 /**
@@ -24,7 +22,7 @@ import com.alibaba.dubbo.config.spring.AnnotationBean;
  * @version $Id: Starter.java, v 0.1 2017-06-14 下午5:08 tanghong.th Exp $$
  */
 @EnableAutoConfiguration
-@ComponentScan(basePackages = "me.gavincook", includeFilters = {@Filter(classes = Service.class)})
+@ComponentScan(basePackages = "me.gavincook")
 public class Starter {
 
     private static final Logger logger = LoggerFactory.getLogger(Starter.class);
@@ -35,7 +33,9 @@ public class Starter {
      */
     @Bean
     public AnnotationBean annotationBean(){
-        return new AnnotationBean();
+        AnnotationBean annotationBean = new AnnotationBean();
+        annotationBean.setPackage("me.gavincook");
+        return annotationBean;
     }
 
     /**
