@@ -4,22 +4,25 @@
  */
 package me.gavincook.dubbo.consumer;
 
-import com.alibaba.dubbo.config.annotation.Reference;
-import com.alibaba.dubbo.rpc.service.EchoService;
+import java.util.HashMap;
+import java.util.Map;
 
-import me.gavincook.dubbo.api.Bank;
-import me.gavincook.dubbo.api.model.Card;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import com.alibaba.dubbo.config.ApplicationConfig;
+import com.alibaba.dubbo.config.ReferenceConfig;
+import com.alibaba.dubbo.config.annotation.Reference;
+import com.alibaba.dubbo.rpc.service.EchoService;
+import com.alibaba.dubbo.rpc.service.GenericService;
+
+import me.gavincook.dubbo.api.Bank;
+import me.gavincook.dubbo.api.model.Card;
 
 /**
  * @author Gavincook
@@ -37,6 +40,21 @@ public class ATMTest {
 
     @Reference(check = true, version = "1.0", validation = "true")
     private Bank ccb;
+
+    /**
+     * 泛化调用，因为一个标识的服务只能有一种类型，因此这里使用与前面不同的版本。
+     * <p>
+     *  服务标识：reference.group() + "/" + interfaceName + ":" + reference.version()，具体参见{@link com.alibaba.dubbo.config.spring.AnnotationBean#refer(Reference, Class)}
+     * </p>
+     */
+    @Reference(version = "3.0", generic = true, interfaceClass = Bank.class)
+    private GenericService genericService;
+
+    /**
+     * 访问服务端泛化服务实现，注意reference的url必须带上generic=true，详见dubbo-resolve.properties
+     */
+    @Reference(interfaceClass = Bank.class, version = "4.0")
+    private Bank genericBank;
 
     @BeforeClass
     public static void init(){
@@ -98,5 +116,35 @@ public class ATMTest {
 
         card.setUserName("GavinCook");
         assert icbc.openAccount(card);
+    }
+
+    /**
+     * 泛化调用远端正常服务，可用于编写通用的测试工具。
+     * <p>
+     *     这里用map的参数去调用远端的需要card参数的接口
+     * </p>
+     * <p>
+     *     可用于实现统一的服务测试框架，如配置好应用信息、注册中心信息，然后可指定接口和方法、参数来调用目标接口
+     * </p>
+     */
+    @Test
+    public void testGenericInvoke(){
+        Map<String, Object> card = new HashMap<>();
+        card.put("userName", "GavinCook");
+        card.put("number", "12345678901234567");
+
+        assert (Boolean)genericService.$invoke("openAccount",
+            new String[]{"me.gavincook.dubbo.api.model.Card"}, new Object[]{card});
+    }
+
+    /**
+     * 服务端泛化接口测试，服务端的GenericBank是泛化服务暴露，简单的返回方法名。
+     */
+    @Test
+    public void testInvokeGeneric() {
+        Card card = new Card();
+        card.setNumber("12345678901234567");
+        //对于基础类型直接传递，对于其他对象会序列化为List或者Map
+        assert Boolean.valueOf(genericBank.openAccount(card));
     }
 }

@@ -42,7 +42,6 @@ public interface Bank {
      * @param card
      * @return
      */
-
     boolean closeAccount(Card card);
 
 

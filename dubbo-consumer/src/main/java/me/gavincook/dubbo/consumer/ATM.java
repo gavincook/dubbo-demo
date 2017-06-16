@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ATM {
 
-    @Reference(check = false)
+    @Reference(version = "1.0")
     private Bank bank;
 
 
